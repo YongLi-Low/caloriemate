@@ -51,6 +51,7 @@ export class AppComponent implements OnInit{
       this.menuItems = [
         { label: 'Home', link: '/login/' + username + '/' + id },
         { label: 'Food Calories Tracker', link: '/login/' + username + '/' + id + '/searchnutrition' },
+        { label: 'Exercises', link: '/login/' + username + '/' + id + '/searchexercise' },
         { label: 'Calorie Calculator', link: '/login/' + username + '/' + id + '/caloriecal' },
         { label: 'BMI Calculator', link: '/login/' + username + '/' + id + '/bmi' },
         { label: 'Feedback', link: '/register' },

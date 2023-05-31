@@ -58,7 +58,7 @@
   </mat-expansion-panel>
 
   <mat-expansion-panel *ngIf="bmi !== null">
-    <mat-expansion-panel-header class="header-text custom-header">BMI Calculator</mat-expansion-panel-header>
+    <mat-expansion-panel-header class="header-text custom-header">Your BMI</mat-expansion-panel-header>
     <div class="info-container">
       <p class="info-text">Your BMI is <span class="bmi-text">{{ bmi }}</span>. You can update your BMI <a [routerLink]="['bmi']">here</a></p>
     </div>
@@ -85,7 +85,7 @@
   </mat-expansion-panel>
 
   <mat-expansion-panel *ngIf="calories !== null">
-    <mat-expansion-panel-header class="header-text custom-header">Calories Calculator</mat-expansion-panel-header>
+    <mat-expansion-panel-header class="header-text custom-header">Your Calories</mat-expansion-panel-header>
     <div class="info-container">
       <p class="info-text">The amount of calories your body needs per day is about <span class="bmi-text"> {{ calories }}</span> kcal.</p>
       <p class="info-text">The average recommended daily caloric intake is 2200 calories for males, and 1800 calories for females. 

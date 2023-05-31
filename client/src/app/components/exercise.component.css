@@ -1,0 +1,79 @@
+.form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.form-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-space {
+    flex-grow: 1;
+}
+
+.search-text {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.list-item {
+    border: 1px solid #ccc;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: left;
+}
+
+.spacer {
+    flex-grow: 1;
+}
+
+.success {
+    background-color: green;
+    color: white;
+}
+
+.failure {
+    background-color: red;
+    color: white;
+}
+
+.table-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .table-container table {
+    width: 100%;
+  }
+  
+  .table-container td {
+    width: 50%;
+  }
+
+  .header-text {
+    font-size: 18px;
+    font-style: bold;
+}
+
+.instructions {
+    white-space: normal;
+}
+
+.label-column {
+    width: 10px; /* Adjust the width as per your requirement */
+  }

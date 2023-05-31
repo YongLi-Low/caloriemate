@@ -1,1 +1,126 @@
-<p>exercise works!</p>
+<h3 class="form-header">Search Exercises</h3>
+
+<form class="form" [formGroup]="exerciseForm" (ngSubmit)="search()">
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Exercise Name:</mat-label>
+            <input matInput type="text" formControlName="name">
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Exercise Type:</mat-label>
+            <mat-select formControlName="type">
+                <mat-option value="cardio">Cardio</mat-option>
+                <mat-option value="olympic_weightlifting">Olympic Weightlifting</mat-option>
+                <mat-option value="plyometrics">Plyometrics</mat-option>
+                <mat-option value="powerlifting">Powerlifting</mat-option>
+                <mat-option value="strength">Strength</mat-option>
+                <mat-option value="stretching">Stretching</mat-option>
+                <mat-option value="strongman">Strongman</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Muscle Group:</mat-label>
+            <mat-select formControlName="muscle">
+                <mat-option value="abdominals">Abdominals</mat-option>
+                <mat-option value="abductors">Abductors</mat-option>
+                <mat-option value="adductors">Adductors</mat-option>
+                <mat-option value="biceps">Biceps</mat-option>
+                <mat-option value="calves">Calves</mat-option>
+                <mat-option value="chest">Chest</mat-option>
+                <mat-option value="forearms">Forearms</mat-option>
+                <mat-option value="glutes">Glutes</mat-option>
+                <mat-option value="hamstrings">Hamstrings</mat-option>
+                <mat-option value="lats">Lats</mat-option>
+                <mat-option value="lower_back">Lower Back</mat-option>
+                <mat-option value="middle_back">Middle Back</mat-option>
+                <mat-option value="neck">Neck</mat-option>
+                <mat-option value="quadriceps">Quadriceps</mat-option>
+                <mat-option value="traps">Traps</mat-option>
+                <mat-option value="triceps">Triceps</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Difficulty:</mat-label>
+            <mat-select formControlName="difficulty">
+                <mat-option value="beginner">Beginner</mat-option>
+                <mat-option value="intermediate">Intermediate</mat-option>
+                <mat-option value="expert">Expert</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="button-container">
+        <button mat-raised-button color="primary" type="submit" [disabled]="exerciseForm.invalid">Search</button>
+        <div class="button-space"></div>
+        <button mat-raised-button color="warn" type="button" (click)="goBack()">Back</button>
+    </div>
+    <div>
+        <mat-progress-bar *ngIf="isSearching" mode="indeterminate"></mat-progress-bar>
+    </div>
+</form>
+<br>
+<hr>
+<mat-list>
+    <mat-list-item class="list-item" *ngFor="let e of exerciseData">
+        <div class="table-container">
+            <table>
+                <tr>
+                    <td>
+                        <span>Exercise:</span>
+                    </td>
+                    <td>
+                        <span matListItemTitle>{{ e.name | titlecase }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>Exercise Type: </span>
+                    </td>
+                    <td>
+                        <span matListItemLine>{{ e.type | titlecase }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>Muscle Group: </span>
+                    </td>
+                    <td>
+                        <span matListItemLine>{{ e.muscle | titlecase }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>Equipment: </span>
+                    </td>
+                    <td>
+                        <span matListItemLine>{{ e.equipment | titlecase }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>Difficulty: </span>
+                    </td>
+                    <td>
+                        <span matListItemLine>{{ e.difficulty | titlecase }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span>Instructions: </span>
+                    </td>
+                    <td>
+                        <span class="instructions" matListItemLine>{{ e.instructions }}</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </mat-list-item>
+</mat-list>
+<div *ngIf="showNoResults">
+    <h4>No Results Found</h4>
+</div>
