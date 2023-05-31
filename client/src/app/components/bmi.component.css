@@ -1,0 +1,44 @@
+.form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.form-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-space {
+    flex-grow: 1;
+}
+
+.bmi-text {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.low-risk-text {
+    color: green;
+    font-weight: bold;
+}
+
+.moderate-risk-text {
+    color: orange;
+    font-weight: bold
+}
+
+.high-risk-text {
+    color: red;
+    font-weight: bold
+}

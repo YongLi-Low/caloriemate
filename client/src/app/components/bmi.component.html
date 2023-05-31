@@ -1,0 +1,51 @@
+<h3 class="form-header">BMI Calculator</h3>
+
+<form class="form" [formGroup]="bmiForm" (ngSubmit)="calculateBmi()">
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Weight (kg): </mat-label>
+            <input matInput type="number" formControlName="weight">
+            <mat-error *ngIf="bmiForm.get('weight')?.errors">
+                Weight is required
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Height (cm): </mat-label>
+            <input matInput type="number" formControlName="height">
+            <mat-error *ngIf="bmiForm.get('height')?.errors">
+                Height is required
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        <button mat-raised-button color="primary" type="submit" [disabled]="bmiForm.invalid">Submit</button>
+    </div>
+</form>
+<br>
+<br>
+
+<div *ngIf="result">
+    <h3>
+        Your BMI: <span class="bmi-text">{{result}}</span> 
+    </h3>
+    <p>
+        <span *ngIf="result < 18.5">
+            You are at risk for other nutritional deficiency and osteopotosis. You are encouraged to eat a balanced meal and to seek medical advice if necessary.
+        </span>
+        <span *ngIf="result > 18.5 && result < 23">
+            You are at <span class="low-risk-text">LOW RISK</span> for obesity-related diseases. Maintain a healthy weight by balancing your caloric input (diet) and output (physical activity).
+        </span>
+        <span *ngIf="result > 23 && result < 27.5">
+            You are at <span class="moderate-risk-text">MODERATE RISK</span> for obesity-related diseases. Aim to lose 5% to 10% of your body weight over 6 to 12 months by increasing physical activity and reducing caloric intake.
+        </span>
+        <span *ngIf="result > 27.5">
+            You are at <span class="high-risk-text">HIGH RISK</span> for obesity-related diseases. Aim to lose 5% to 10% of your body weight over 6 to 12 months by increasing physical activity and reducing caloric intake. Go for regular health screening to keep co-morbid conditions* in check.
+            *Cardiovascular risks of metabolic syndrome, including Type 2 Diabetes, Hypertension and Hyperlipidemia.
+        </span>
+    </p>
+    <p>
+        <img [src]="'./assets/images/bmi_ranges.jpg'">
+    </p>
+</div>

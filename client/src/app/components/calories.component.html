@@ -1,0 +1,69 @@
+<h3 class="form-header">Calorie Calculator</h3>
+
+<form class="form" [formGroup]="calForm" (ngSubmit)="calculateCal()">
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Gender: </mat-label>
+            <mat-select formControlName="gender">
+                <mat-option value="male">Male</mat-option>
+                <mat-option value="female">Female</mat-option>
+            </mat-select>
+            <mat-error *ngIf="calForm.get('gender')?.errors">
+                Please select a gender
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Age (years): </mat-label>
+            <input matInput type="number" formControlName="age">
+            <mat-error *ngIf="calForm.get('age')?.errors">
+                Age is required
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Weight (kg): </mat-label>
+            <input matInput type="number" formControlName="weight">
+            <mat-error *ngIf="calForm.get('weight')?.errors">
+                Weight is required
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Height (cm): </mat-label>
+            <input matInput type="number" formControlName="height">
+            <mat-error *ngIf="calForm.get('height')?.errors">
+                Height is required
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Activity Level: </mat-label>
+            <mat-select formControlName="activityLevel">
+                <mat-option value="sedentary">Sedentary (little or no exercise)</mat-option>
+                <mat-option value="lightlyActive">Lightly Active (light exercise/sports 1-3 days/week)</mat-option>
+                <mat-option value="moderatelyActive">Moderately Active (moderate exercise/sports 3-5 days/week)</mat-option>
+                <mat-option value="veryActive">Very Active (hard exercise/sports 6-7 days a week)</mat-option>
+                <mat-option value="superActive">Super Active (very hard exercise/sports & physical job or competitive sports)</mat-option>
+            </mat-select>
+            <mat-error *ngIf="calForm.get('activityLevel')?.errors">
+                Please indicate your activity level
+            </mat-error>
+        </mat-form-field>
+    </div>
+    <div>
+        <button mat-raised-button color="primary" type="submit" [disabled]="calForm.invalid">Submit</button>
+    </div>
+</form>
+<br>
+<br>
+
+<div *ngIf="result">
+    <h3>
+        Your daily recommended calories is <span class="cal-text">{{result}} kcal</span>
+    </h3>
+</div>

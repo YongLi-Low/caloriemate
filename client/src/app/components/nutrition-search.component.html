@@ -1,0 +1,98 @@
+<h3 class="form-header">Search Food</h3>
+
+<form class="form" [formGroup]="nutritionForm" (ngSubmit)="search()">
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Food:</mat-label>
+            <input matInput type="text" formControlName="foodName">
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Weight (g):</mat-label>
+            <input matInput type="text" placeholder="Optional" matTooltip="Default weight is 100g" formControlName="quantity">
+        </mat-form-field>
+    </div>
+    <div class="button-container">
+        <button mat-raised-button color="primary" type="submit" [disabled]="nutritionForm.invalid">Search</button>
+        <div class="button-space"></div>
+        <button mat-raised-button color="warn" type="button" (click)="goBack()">Back</button>
+    </div>
+    <br>
+    <div>
+        <mat-progress-bar *ngIf="isSearching" mode="indeterminate"></mat-progress-bar>
+    </div>
+</form>
+<br>
+<hr>
+<mat-list>
+    <mat-list-item class="list-item" *ngFor="let n of nutritionData">
+        <div class="table-container">
+            <table>
+                <tr>
+                    <td>
+                        <span matListItemTitle>{{ n.name | titlecase }}</span>
+                        <span matListItemLine>Calories: {{ n.calories }} kcal</span>
+                        <span matListItemLine>Serving Size: {{ n.servingSize }} g</span>
+                        <span matListItemLine>Total Fats: {{ n.fatTotal }} g</span>
+                        <span matListItemLine>Saturated Fats: {{ n.fatSaturated }} g</span>
+                        <span matListItemLine>Protein: {{ n.protein }} g</span>
+                        <span matListItemLine>Sodium: {{ n.sodium }} mg</span>
+                        <span matListItemLine>Cholesterol: {{ n.cholesterol }} mg</span>
+                        <span matListItemLine>Carbohydrates: {{ n.carbohydrates }} g</span>
+                        <span matListItemLine>Fibre: {{ n.fibre }} g</span>
+                        <span matListItemLine>Sugar: {{ n.sugar }} g</span>
+                    </td>
+                    <td>
+                        <button mat-icon-button aria-hidden="false" color="primary" (click)="addCalories(n)">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </mat-list-item>
+</mat-list>
+<div *ngIf="showNoResults">
+    <h4>No Results Found</h4>
+</div>
+<hr>
+<mat-accordion>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header class="header-text custom-header">Customised Addition</mat-expansion-panel-header>
+        <form class="form" [formGroup]="customForm" (ngSubmit)="addCustomFood()">
+            <div>
+                <mat-form-field class="full-width">
+                    <mat-label>Food: </mat-label>
+                    <input matInput type="text" formControlName="foodName">
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="full-width">
+                    <mat-label>Weight: </mat-label>
+                    <input matInput type="number" formControlName="quantity">
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field class="full-width">
+                    <mat-label>Total Calories: </mat-label>
+                    <input matInput type="number" formControlName="calories">
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="picker" formControlName="selectedDate" [max]="maxFormDate">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="button-container">
+                <button mat-raised-button color="primary" type="submit" [disabled]="customForm.invalid">Add</button>
+                <div class="button-space"></div>
+                <button mat-raised-button color="warn" type="button" (click)="goBack()">Back</button>
+            </div>
+
+        </form>
+    </mat-expansion-panel>
+</mat-accordion>
+

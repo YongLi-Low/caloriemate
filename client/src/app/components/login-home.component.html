@@ -1,0 +1,119 @@
+<br>
+<ng-container *ngIf="username">
+    <p class="welcome-text">Welcome {{ username | titlecase }}</p>
+</ng-container>
+<br>
+<hr>
+<br>
+<div class="info-container">
+  <p class="info-text bold-text">Start adding food by searching for them <a [routerLink]="['searchnutrition']">here</a></p>
+</div>
+<br>
+<hr>
+<mat-accordion>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header class="header-text custom-header">Track the Calories of Food You Ate</mat-expansion-panel-header>
+    <p class="info-text">You have consumed about <span class="bmi-text"> {{ totalCalories }}</span> kcal on this date.</p>
+    <p class="info-text">The amount of calories your body needs per day is about <span class="bmi-text"> {{ calories }}</span> kcal.</p>
+    <div *ngIf="caloriesLeft > 0">
+      <p class="info-text">You are on about <span class="bmi-text"> {{ caloriesLeft | number: '1.1-1' }}</span> kcal deficit.</p>
+    </div>
+    <div *ngIf="caloriesLeft < 0">
+      <p class="info-text">You have exceeded by about <span class="bmi-text"> {{ caloriesLeft * -1 | number: '1.1-1' }}</span> kcal today.</p>
+    </div>
+    <hr>
+    
+    <form [formGroup]="dateForm">
+      <mat-label>Choose date to see history: </mat-label>
+      <mat-form-field>
+        <input matInput [matDatepicker]="picker" formControlName="selectedDate" [max]="maxFormDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </form>
+
+    <mat-list>
+      <mat-list-item *ngFor="let c of caloriesList">
+        <div class="table-container">
+          <table>
+            <tr>
+              <td>
+                <span matListItemTitle>{{c.foodName | titlecase}}</span>
+                <span matListItemLine>Quantity: {{c.quantity}} g</span>
+                <span matListItemLine>Calories: {{c.calories}} kcal</span>
+                <span matListItemLine>Date: {{c.entryDate}}</span>
+              </td>
+              <td>
+                <button mat-icon-button color="warn" (click)="confirmDeleteDialog(c.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </table>
+          <hr>
+        </div>
+      </mat-list-item>
+    </mat-list>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="bmi !== null">
+    <mat-expansion-panel-header class="header-text custom-header">BMI Calculator</mat-expansion-panel-header>
+    <div class="info-container">
+      <p class="info-text">Your BMI is <span class="bmi-text">{{ bmi }}</span>. You can update your BMI <a [routerLink]="['bmi']">here</a></p>
+    </div>
+    <div class="info-container">
+        <p>
+            <span *ngIf="bmi < 18.5">
+                You are at risk for other nutritional deficiency and osteopotosis. You are encouraged to eat a balanced meal and to seek medical advice if necessary.
+            </span>
+            <span *ngIf="bmi > 18.5 && bmi < 23">
+                You are at <span class="low-risk-text">LOW RISK</span> for obesity-related diseases. Maintain a healthy weight by balancing your caloric input (diet) and output (physical activity).
+            </span>
+            <span *ngIf="bmi > 23 && bmi < 27.5">
+                You are at <span class="moderate-risk-text">MODERATE RISK</span> for obesity-related diseases. Aim to lose 5% to 10% of your body weight over 6 to 12 months by increasing physical activity and reducing caloric intake.
+            </span>
+            <span *ngIf="bmi > 27.5">
+                You are at <span class="high-risk-text">HIGH RISK</span> for obesity-related diseases. Aim to lose 5% to 10% of your body weight over 6 to 12 months by increasing physical activity and reducing caloric intake. Go for regular health screening to keep co-morbid conditions* in check.
+                *Cardiovascular risks of metabolic syndrome, including Type 2 Diabetes, Hypertension and Hyperlipidemia.
+            </span>
+        </p>
+        <p>
+            <img [src]="'./assets/images/bmi_ranges.jpg'">
+        </p>
+    </div>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel *ngIf="calories !== null">
+    <mat-expansion-panel-header class="header-text custom-header">Calories Calculator</mat-expansion-panel-header>
+    <div class="info-container">
+      <p class="info-text">The amount of calories your body needs per day is about <span class="bmi-text"> {{ calories }}</span> kcal.</p>
+      <p class="info-text">The average recommended daily caloric intake is 2200 calories for males, and 1800 calories for females. 
+        These values are based on an average weight and physical activity of the average male and female Singaporean. 
+        For a more personalised and accurate caloric requirement, you would need to take into account your age, gender, 
+        height, weight, and activity level.
+      </p>
+      <p class="info-text">Should there be any changes to the above, you may calculate and update your required calories <a [routerLink]="['caloriecal']">here</a></p>
+    </div>
+  </mat-expansion-panel>
+  
+  <mat-expansion-panel *ngIf="bmi === null">
+    <mat-expansion-panel-header class="header-text">BMI</mat-expansion-panel-header>
+    <div class="info-container">
+      <p class="info-text">
+        Start off by finding out your BMI <a [routerLink]="['bmi']">here</a>
+      </p>
+    </div>
+  </mat-expansion-panel>
+  
+  <mat-expansion-panel *ngIf="calories === null">
+    <mat-expansion-panel-header class="header-text">Calories requirements</mat-expansion-panel-header>
+    <div class="info-container">
+      <p class="info-text">
+        Find out how many calories your body needs per day <a [routerLink]="['caloriecal']">here</a>
+      </p>
+    </div>
+  </mat-expansion-panel>
+
+</mat-accordion>
+  

@@ -1,0 +1,25 @@
+<h3 class="form-header">Log In</h3>
+
+<form class="form" [formGroup]="loginForm" (ngSubmit)="login()">
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Username: </mat-label>
+            <input matInput type="text" formControlName="username">
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Password: </mat-label>
+            <input matInput type="password" formControlName="password">
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-checkbox formControlName="rememberMe">Remember Me</mat-checkbox>
+    </div>
+    <div class="button-container">
+        <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Log In</button>
+    </div>
+</form>
+<br>
+<span>No account? Register </span>
+<a [routerLink]="['/register']">here</a>

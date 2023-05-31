@@ -1,0 +1,17 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button [mat-menu-trigger-for]="menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>CalorieMate</span>
+  <span class="example-spacer"></span>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item *ngFor="let menuItem of menuItems" [routerLink]="menuItem.link">{{menuItem.label}}</button>
+  </mat-menu>
+  <span>{{formattedDate}}</span>
+</mat-toolbar>
+
+<router-outlet></router-outlet>
+
+<footer class="mat-footer">
+  <p class="footer-text">&copy; 2023 CalorieMate. All rights reserved.</p>
+</footer>
