@@ -1,5 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class UsernameService {
   // id$ = this.idSubject.asObservable();
   userInfo$ = this.userInfoSubject.asObservable();
 
-  constructor() { }
+  constructor(private httpClient: HttpClient) { }
 
   // setUsername(username: string) {
   //   this.usernameSubject.next(username);
@@ -34,5 +35,11 @@ export class UsernameService {
 
   getUserInfo() {
     return this.userInfoSubject.asObservable();
+  }
+
+  // Get profile image
+  getProfile(id: string): Observable<string> {
+    const url = 'profile/'+ id + '/getprofile';
+    return this.httpClient.get(url, {responseType: 'text'});
   }
 }

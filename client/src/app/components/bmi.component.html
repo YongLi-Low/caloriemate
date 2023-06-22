@@ -19,8 +19,10 @@
             </mat-error>
         </mat-form-field>
     </div>
-    <div>
+    <div class="button-container">
         <button mat-raised-button color="primary" type="submit" [disabled]="bmiForm.invalid">Submit</button>
+        <div class="button-space"></div>
+        <button mat-raised-button color="warn" type="button" [routerLink]="'/login/' + username + '/' + id">Back to Home</button>
     </div>
 </form>
 <br>

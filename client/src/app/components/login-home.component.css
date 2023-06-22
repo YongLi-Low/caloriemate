@@ -66,3 +66,35 @@
     background-color: #e0e0e0; /* Set the header background color */
     color: #333; /* Set the header text color */
   }
+
+  .calories-progress-bar {
+    height: 10px;
+    background-color: lightgray;
+  }
+  
+  .calories-progress-bar-warn {
+    background-color: yellow;
+  }
+  
+  .calories-progress-bar-exceed {
+    background-color: red !important;
+  }
+
+  .panel-content {
+    justify-content: flex-start;
+  }
+  
+  .item-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-right: 16px;
+  }
+
+  .item-label, .item-weight {
+    text-align: center;
+  }
+  
+  .item-label {
+    margin-top: 10px;
+  }

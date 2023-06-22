@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegisterService } from '../services/register.service';
@@ -32,7 +31,7 @@ export class RegisterComponent implements OnInit{
       username: this.fb.control('', [Validators.required, Validators.minLength(3)]),
       email: this.fb.control('', [Validators.required, Validators.email]),
       password: this.fb.control('', Validators.required),
-      confirmPassword: this.fb.control('', [Validators.required])
+      confirmPassword: this.fb.control('', [Validators.required]),
     }, { validators: this.passwordMatchValidator })
   }
 
@@ -70,5 +69,10 @@ export class RegisterComponent implements OnInit{
         }
       })
       .catch(error => console.log(error))
+  }
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    this.regForm.patchValue({image:file});
   }
 }

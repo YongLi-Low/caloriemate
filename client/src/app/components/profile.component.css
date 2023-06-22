@@ -1,0 +1,14 @@
+.file-input {
+    display: none;
+}
+
+.info-text {
+    font-size: 18px;
+    font-style: italic;
+}
+
+.bold-text {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333; /* Change the color to your preference */
+}

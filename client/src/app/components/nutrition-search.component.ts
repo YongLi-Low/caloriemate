@@ -69,7 +69,7 @@ export class NutritionSearchComponent implements OnInit {
       .then((response: any) => {
         this.nutritionData = response;
         this.showNoResults = this.nutritionData.length === 0;
-        console.info(">>> Response: ", response)
+        // console.info(">>> Response: ", response)
         this.isSearching = false;
       })
       .catch(error => {

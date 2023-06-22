@@ -1,5 +1,6 @@
 package csf.iss.server.controllers;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartFile;
 
 import csf.iss.server.models.User;
 import csf.iss.server.services.UserService;
@@ -90,6 +94,47 @@ public class UserController {
                             .build();
                     
         return ResponseEntity.status(HttpStatus.OK).body(obj.toString());
+    }
+
+    // Update Profile pic
+    @PutMapping(path = "/profile/{id}")
+    public ResponseEntity<String> updateProfile(@PathVariable String id, @RequestParam("thumbnail") MultipartFile thumbnail) {
+        String resp = "";
+
+        try {
+            userSvc.updateProfile(id, thumbnail);
+            resp = "Image updated";
+        }
+        catch (MaxUploadSizeExceededException e) {
+            resp = "Maximum upload size exceeded";
+        }
+        catch (IOException e) {
+            resp = "Failed to upload";
+        }
+
+        JsonObject obj = Json.createObjectBuilder()
+                            .add("response", resp)
+                            .build();
+        
+        return ResponseEntity.status(HttpStatus.OK).body(obj.toString());
+    }
+
+    // Get Profile pic
+    @GetMapping(path = "/profile/{id}/getprofile")
+    public ResponseEntity<String> getProfile(@PathVariable String id) {
+        String resp = "";
+        Optional<String> imageOptional = userSvc.getProfileImage(id);
+        if (imageOptional.isPresent()) {
+            String base64Image = imageOptional.get();
+            resp = base64Image;
+            JsonObject obj = Json.createObjectBuilder()
+                        .add("response", resp)
+                        .build();
+            return ResponseEntity.status(HttpStatus.OK).body(resp);
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
     }
 
     // Update BMI

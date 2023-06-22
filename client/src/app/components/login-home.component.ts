@@ -1,4 +1,4 @@
-import { Component, NgModule, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, NgModule, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UsernameService } from '../services/username.service';
 import { HttpClient } from '@angular/common/http';
@@ -9,14 +9,14 @@ import { DatePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDatepickerInput, MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-login-home',
   templateUrl: './login-home.component.html',
   styleUrls: ['./login-home.component.css']
 })
-export class LoginHomeComponent implements OnInit{
+export class LoginHomeComponent implements OnInit {
 
   dateForm!: FormGroup;
   maxFormDate!: string;
@@ -27,8 +27,16 @@ export class LoginHomeComponent implements OnInit{
   calories!: number | null;
   caloriesList!: Calories[];
   currentDate!: string
+  dateList: string[] = [];
   totalCalories!: number;
+  totalCaloriesList: number[] = []; // List of calories for each of the past 7 days
   caloriesLeft!: number;
+  caloriesExceeded: boolean = false;
+  // Retrieving profile pic
+  profileImage: string | undefined;
+  noImageAvailable: boolean = false;
+
+  chart!: any;
 
   constructor(private activatedRoute: ActivatedRoute, private usernameSvc: UsernameService,
               private httpClient: HttpClient, private nutritionSvc: NutritionService,
@@ -40,6 +48,9 @@ export class LoginHomeComponent implements OnInit{
     this.usernameSvc.setUserInfo(this.username, this.id)
     this.selectedDate = this.getCurrentDateInMySQLFormat();
     this.currentDate = this.getCurrentDateInMySQLFormat();
+    // console.info("Current Date: ", this.currentDate)
+    // Get profile pic
+    this.getProfile();
 
     // Date Form, then get the list of calories after the date is selected
     this.dateForm = new FormGroup({
@@ -68,7 +79,36 @@ export class LoginHomeComponent implements OnInit{
         }
       }
     )
+
+    // Get a list of past 7 days (dates)
+    const startDate = new Date(this.currentDate);
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(startDate);
+      date.setDate(date.getDate() - i);
+      const formattedDate = date.toISOString().split('T')[0];
+
+      this.dateList.push(formattedDate);
+      // console.info("Past 7 days: ", date)
+    }
+    // console.info("Date List: ", this.dateList);
+
+    // Get a list of totalCalories for each day for the past 7 days
+    this.calculateTotalCalories()
+    .then(() => {
+      // console.info("Total Calories List: ", this.totalCaloriesList);
+      this.createChart(this.dateList, this.totalCaloriesList);
+    })
+    .catch(error => {
+      console.error(error);
+    });
     
+    // Calculate caloriesLeft and set caloriesExceeded
+    if (this.calories != null) {
+      if (this.caloriesLeft !== null && this.caloriesLeft < 0 && this.caloriesLeft * -1 > this.calories) {
+        this.caloriesExceeded = true;
+      }
+    }
+
     // Get statement to fetch the list of food and calories eaten
     this.nutritionSvc.getCalories(this.id, this.currentDate)
       .then((response: any) => {
@@ -137,6 +177,15 @@ export class LoginHomeComponent implements OnInit{
     this.caloriesLeft = this.calories - this.totalCalories;
   }
 
+  // Progress bar of calories consumed
+  calculateProgress(): number {
+    let progress: number = 0;
+    if (this.calories !== null) {
+      progress = (this.totalCalories / this.calories) * 100;
+    }
+    return Math.min(progress, 100)
+  }
+
   confirmDeleteDialog(id: number) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '250px',
@@ -172,12 +221,82 @@ export class LoginHomeComponent implements OnInit{
         console.error(error);
       });
   }
-  
-  
-  
-  
-  
-  
-  
 
+  // Get profile pic
+  async getProfile(): Promise<void> {
+
+    try {
+      const response = await lastValueFrom(this.usernameSvc.getProfile(this.id));
+      if (response) {
+        this.profileImage = 'data:image/jpeg;base64,' + response;
+        this.noImageAvailable = false;
+      }
+      else {
+        this.noImageAvailable = true;
+      }
+      // console.info(">>> Response: ", response);
+    } 
+    catch (error) {
+      console.error('Failed to retrieve profile image:', error);
+    }
+  }
+
+  // Get a list of totalCalories for each day for the past 7 days
+  async calculateTotalCalories(): Promise<void> {
+    let totalCaloriesByDate: { [date: string]: number } = {};
+  
+    const promises = this.dateList.map(date => {
+      return this.nutritionSvc.getCalories(this.id, date)
+        .then((response: any) => {
+          const caloriesList = response;
+          let totalCalories = 0;
+          caloriesList.forEach((calories: Calories) => {
+            totalCalories += calories.calories;
+          });
+          totalCaloriesByDate[date] = totalCalories;
+        });
+    });
+  
+    return Promise.all(promises)
+      .then(() => {
+        // Create totalCaloriesList from totalCaloriesByDate, in the order of dateList
+        this.totalCaloriesList = this.dateList.map(date => totalCaloriesByDate[date]);
+        // console.info("Calories List: ", this.totalCaloriesList)
+      });
+  }
+  
+  // async calculateTotalCalories(): Promise<void> {
+  //   const promises = this.dateList.map(date => {
+  //     return this.nutritionSvc.getCalories(this.id, date)
+  //       .then((response: any) => {
+  //         const caloriesList = response;
+  //         let totalCalories = 0;
+  //         caloriesList.forEach((calories: Calories) => {
+  //           totalCalories += calories.calories;
+  //         });
+  //         this.totalCaloriesList.push(totalCalories);
+  //         console.info("Calories List: ", this.totalCaloriesList)
+  //       });
+  //   });
+  
+  //   return Promise.all(promises).then(() => {});
+  // }
+
+  createChart(dateList: string[], totalCaloriesList: number[]) {
+    this.chart = new Chart("MyChart", {
+      type: 'line',
+      data: {  //values on x axis
+        labels: dateList,
+        datasets: [
+          {label: "Calories",
+          data: totalCaloriesList,
+          backgroundColor: 'blue'
+          }
+        ]
+      }//,
+      // options: {
+      //   aspectRatio: 1
+      // }
+    })
+  };
 }

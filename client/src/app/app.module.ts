@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,6 +18,10 @@ import { DatePipe } from '@angular/common';
 import { ConfirmDialogComponent } from './components/confirm-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ExerciseComponent } from './components/exercise.component';
+import { ExerciseCalendarComponent } from './components/exercise-calendar.component';
+import { ProfileComponent } from './components/profile.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -30,7 +34,9 @@ import { ExerciseComponent } from './components/exercise.component';
     CaloriesComponent,
     NutritionSearchComponent,
     ConfirmDialogComponent,
-    ExerciseComponent
+    ExerciseComponent,
+    ExerciseCalendarComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +45,14 @@ import { ExerciseComponent } from './components/exercise.component';
     MaterialModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MatDialogModule
+    MatDialogModule,
+    NgChartsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   entryComponents: [ConfirmDialogComponent],
   providers: [DatePipe],

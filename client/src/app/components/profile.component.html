@@ -1,0 +1,25 @@
+<input type="file" class="file-input" accept="image/*"
+       (change)="onFileSelected($event)" #fileUpload>
+
+<div class="file-upload">
+
+    <h3 class="info-text bold-text">Upload profile photo</h3>
+    <br>
+    {{fileName || "Upload file here. Maximum size = 5MB."}}
+
+    <button mat-mini-fab color="primary" class="upload-btn"
+      (click)="fileUpload.click()">
+        <mat-icon>attach_file</mat-icon>
+    </button>
+</div>
+<br>
+<div *ngIf="noImageAvailable; else profileImageTemplate">
+    <p>No profile image available</p>
+</div>
+<br>
+<ng-template #profileImageTemplate>
+    <div *ngIf="profileImage">
+        <h4>Current Profile Photo:</h4>
+        <img [src]="profileImage" alt="Profile Image" width="200" height="200">
+    </div>
+</ng-template>

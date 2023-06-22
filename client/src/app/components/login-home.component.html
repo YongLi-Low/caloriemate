@@ -1,6 +1,14 @@
 <br>
 <ng-container *ngIf="username">
     <p class="welcome-text">Welcome {{ username | titlecase }}</p>
+    <div *ngIf="noImageAvailable; else profileImageTemplate">
+        <!-- <p>No profile image available</p> -->
+    </div>
+    <ng-template #profileImageTemplate>
+        <div *ngIf="profileImage">
+            <img [src]="profileImage" alt="Profile Image" width="100" height="100">
+        </div>
+    </ng-template>
 </ng-container>
 <br>
 <hr>
@@ -13,8 +21,8 @@
 <mat-accordion>
 
   <mat-expansion-panel>
-    <mat-expansion-panel-header class="header-text custom-header">Track the Calories of Food You Ate</mat-expansion-panel-header>
-    <p class="info-text">You have consumed about <span class="bmi-text"> {{ totalCalories }}</span> kcal on this date.</p>
+    <mat-expansion-panel-header class="header-text custom-header">Tracking your Calories</mat-expansion-panel-header>
+    <p class="info-text">You have consumed about <span class="bmi-text"> {{ totalCalories | number:'1.1-1' }}</span> kcal on this date.</p>
     <p class="info-text">The amount of calories your body needs per day is about <span class="bmi-text"> {{ calories }}</span> kcal.</p>
     <div *ngIf="caloriesLeft > 0">
       <p class="info-text">You are on about <span class="bmi-text"> {{ caloriesLeft | number: '1.1-1' }}</span> kcal deficit.</p>
@@ -23,6 +31,16 @@
       <p class="info-text">You have exceeded by about <span class="bmi-text"> {{ caloriesLeft * -1 | number: '1.1-1' }}</span> kcal today.</p>
     </div>
     <hr>
+    <mat-progress-bar
+      class="calories-progress-bar"
+      [class.calories-progress-bar-warn]="caloriesExceeded && caloriesLeft !== null && caloriesLeft < 0"
+      [class.calories-progress-bar-exceed]="caloriesExceeded"
+      mode="determinate" [value]="calculateProgress()">
+    </mat-progress-bar>
+
+    <div class="chart-container">
+      <canvas  id="MyChart" >{{ chart }}</canvas>
+    </div>
     
     <form [formGroup]="dateForm">
       <mat-label>Choose date to see history: </mat-label>
@@ -70,7 +88,7 @@
             <span *ngIf="bmi > 18.5 && bmi < 23">
                 You are at <span class="low-risk-text">LOW RISK</span> for obesity-related diseases. Maintain a healthy weight by balancing your caloric input (diet) and output (physical activity).
             </span>
-            <span *ngIf="bmi > 23 && bmi < 27.5">
+            <span *ngIf="bmi >= 23 && bmi < 27.5">
                 You are at <span class="moderate-risk-text">MODERATE RISK</span> for obesity-related diseases. Aim to lose 5% to 10% of your body weight over 6 to 12 months by increasing physical activity and reducing caloric intake.
             </span>
             <span *ngIf="bmi > 27.5">
@@ -98,7 +116,7 @@
   </mat-expansion-panel>
   
   <mat-expansion-panel *ngIf="bmi === null">
-    <mat-expansion-panel-header class="header-text">BMI</mat-expansion-panel-header>
+    <mat-expansion-panel-header class="header-text custom-header">BMI</mat-expansion-panel-header>
     <div class="info-container">
       <p class="info-text">
         Start off by finding out your BMI <a [routerLink]="['bmi']">here</a>
@@ -107,12 +125,205 @@
   </mat-expansion-panel>
   
   <mat-expansion-panel *ngIf="calories === null">
-    <mat-expansion-panel-header class="header-text">Calories requirements</mat-expansion-panel-header>
+    <mat-expansion-panel-header class="header-text custom-header">Calories requirements</mat-expansion-panel-header>
     <div class="info-container">
       <p class="info-text">
         Find out how many calories your body needs per day <a [routerLink]="['caloriecal']">here</a>
       </p>
     </div>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header class="header-text custom-header">Examples of single serving of wholegrains</mat-expansion-panel-header>
+    <div class="info-container">
+      <p class="info-text">A Quarter plate of wholegrains is about 2 servings of carbohydrates. Having a Quarter plate of wholegrains at each meal will meet the daily recommended intake of 5 to 7 servings of carbohydrates.</p>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+      <div fxLayout="column" class="item-container">
+        <div fxLayout="row" fxLayoutAlign="center">
+          <img [src]="'./assets/images/wholegrain-bread.png'" alt="Bread" width="200">
+        </div>
+        <br>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-label">2 slices of wholemeal bread</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-weight">(60g)</span>
+        </div>
+      </div>
+
+      <div fxLayout="column" class="item-container">
+        <div fxLayout="row" fxLayoutAlign="center">
+          <img [src]="'./assets/images/wholegrain-beehoon.png'" alt="Noodles" width="200">
+        </div>
+        <br>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-label">½ bowl* of wholegrain noodles, beehoon or spaghetti</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-weight">(100g)</span>
+        </div>
+      </div>
+
+      <div fxLayout="column" class="item-container">
+        <div fxLayout="row" fxLayoutAlign="center">
+          <img [src]="'./assets/images/wholegrain-crackers.png'" alt="Crackers" width="200">
+        </div>
+        <br>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-label">4 plain wholemeal crackers</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-weight">(40g)</span>
+        </div>
+      </div>
+      
+      <div fxLayout="column" class="item-container">
+        <div fxLayout="row" fxLayoutAlign="center">
+          <img [src]="'./assets/images/wholegrain-brown-rice.png'" alt="Rice" width="200">
+        </div>
+        <br>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-label">½ bowl of brown or red rice</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-weight">(100g)</span>
+        </div>
+      </div>
+    
+      <div fxLayout="column" class="item-container">
+        <div fxLayout="row" fxLayoutAlign="center">
+          <img [src]="'./assets/images/wholegrain-chapatis.png'" alt="Chapatis" width="200">
+        </div>
+        <br>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-label">2 wholemeal chapatis</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-weight">(60g)</span>
+        </div>
+      </div>
+      
+      <div fxLayout="column" class="item-container">
+        <div fxLayout="row" fxLayoutAlign="center">
+          <img [src]="'./assets/images/wholegrain-oatmeal.png'" alt="Oatmeal" width="200">
+        </div>
+        <br>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-label">⅔ bowl of uncooked oatmeal</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-weight">(50g)</span>
+        </div>
+      </div>
+      <br>
+      <div>
+        <span>*credits to www.healthhub.sg</span>
+      </div>
+      
+    </div> 
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header class="header-text custom-header">Examples of single serving of protein</mat-expansion-panel-header>
+    <div class="info-container">
+      <p class="info-text">A Quarter plate of meat and others is about 1 serving of protein. Having a Quarter plate of protein at each meal will meet the daily recommended intake of 2 to 3 servings of protein.</p>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+      <div fxLayout="column" class="item-container">
+        <div fxLayout="row" fxLayoutAlign="center">
+          <img [src]="'./assets/images/protein-fish.png'" alt="Fish" width="200">
+        </div>
+        <br>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-label">1 palm-sized piece of meat, fish or poultryd</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-weight">(90g)</span>
+        </div>
+      </div>
+
+      <div fxLayout="column" class="item-container">
+        <div fxLayout="row" fxLayoutAlign="center">
+          <img [src]="'./assets/images/protein-milk.png'" alt="Milk" width="200">
+        </div>
+        <br>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-label">2 cups of reduced-fat milk</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-weight">(500ml)</span>
+        </div>
+      </div>
+
+      <div fxLayout="column" class="item-container">
+        <div fxLayout="row" fxLayoutAlign="center">
+          <img [src]="'./assets/images/protein-beancurd.png'" alt="Beancurd" width="200">
+        </div>
+        <br>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-label">2 small blocks of soft beancurd</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-weight">(170g)</span>
+        </div>
+      </div>
+      
+      <div fxLayout="column" class="item-container">
+        <div fxLayout="row" fxLayoutAlign="center">
+          <img [src]="'./assets/images/protein-prawns.png'" alt="Prawns" width="200">
+        </div>
+        <br>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-label">5 medium prawns</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-weight">(90g)</span>
+        </div>
+      </div>
+    
+      <div fxLayout="column" class="item-container">
+        <div fxLayout="row" fxLayoutAlign="center">
+          <img [src]="'./assets/images/protein-pulses.png'" alt="Pulses" width="200">
+        </div>
+        <br>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-label">¾ cups of cooked pulses (peas, beans, lentils)</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-weight">(120g)</span>
+        </div>
+      </div>
+      
+      <div fxLayout="column" class="item-container">
+        <div fxLayout="row" fxLayoutAlign="center">
+          <img [src]="'./assets/images/protein-eggs.png'" alt="Eggs" width="200">
+        </div>
+        <br>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-label">3 eggs</span>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <span class="item-weight">(150g)</span>
+        </div>
+      </div>
+      <br>
+      <div>
+        <span>*credits to www.healthhub.sg</span>
+      </div>
+    </div> 
+  </mat-expansion-panel>
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header class="header-text custom-header">Recommended intake for fruits and vegetables</mat-expansion-panel-header>
+    <div class="info-container">
+      <p class="info-text">A Half plate of fruit and vegetables is about 2 servings, i.e. 1 serving of fruit and 1 serving of vegetables.</p>
+      <p class="info-text"> Having a Half plate of fruit and vegetables at each meal will meet the daily recommended intake of at least 2 servings of fruit and 2 servings of vegetables.</p>
+    </div>
+    <br>
+      <div>
+        <span>*credits to www.healthhub.sg</span>
+      </div>
   </mat-expansion-panel>
 
 </mat-accordion>

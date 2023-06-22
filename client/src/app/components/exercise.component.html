@@ -74,7 +74,9 @@
                         <span>Exercise:</span>
                     </td>
                     <td>
-                        <span matListItemTitle>{{ e.name | titlecase }}</span>
+                        <span matListItemTitle>{{ e.name | titlecase }} 
+                            (<a [routerLink]="['/login/' + username + '/' + id + '/searchexercise/' + e.name]">Schedule Exercise</a>)
+                        </span>
                     </td>
                 </tr>
                 <tr>

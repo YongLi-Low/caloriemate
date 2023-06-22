@@ -8,16 +8,20 @@ import { BmiComponent } from './components/bmi.component';
 import { CaloriesComponent } from './components/calories.component';
 import { NutritionSearchComponent } from './components/nutrition-search.component';
 import { ExerciseComponent } from './components/exercise.component';
+import { ExerciseCalendarComponent } from './components/exercise-calendar.component';
+import { ProfileComponent } from './components/profile.component';
 
 const routes: Routes = [
   {path:"", component:LoginComponent},
   {path:"register", component:RegisterComponent},
   {path:"register/success", component:RegisterSuccessComponent},
   {path:"login/:username/:id", component:LoginHomeComponent},
+  {path:"login/:username/:id/profile", component:ProfileComponent},
   {path:"login/:username/:id/caloriecal", component:CaloriesComponent},
   {path:"login/:username/:id/bmi", component:BmiComponent},
   {path:"login/:username/:id/searchnutrition", component:NutritionSearchComponent},
   {path:"login/:username/:id/searchexercise", component:ExerciseComponent},
+  {path:"login/:username/:id/searchexercise/:exercise", component:ExerciseCalendarComponent},
   {path:"**", redirectTo:"", pathMatch:"full"}
 ];
 

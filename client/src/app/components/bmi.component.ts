@@ -14,12 +14,14 @@ export class BmiComponent implements OnInit{
   bmiForm!: FormGroup;
   result: number | null = null;
   id!: string;
+  username!: string;
 
   constructor(private fb: FormBuilder, private activatedRoute: ActivatedRoute,
               private httpClient: HttpClient) { }
 
   ngOnInit(): void {
     this.id = this.activatedRoute.snapshot.params['id'];
+    this.username = this.activatedRoute.snapshot.params['username'];
     // console.info(">>> ID: ", this.id);
     this.bmiForm = this.createForm();
   }

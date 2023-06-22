@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sendgrid.Method;
 import com.sendgrid.Request;
@@ -42,6 +43,16 @@ public class UserService {
         return userRepo.getId(username);
     }
 
+    // Update profile pic
+    public void updateProfile(String id, MultipartFile thumbnail) throws IOException {
+        userRepo.updateProfile(id, thumbnail.getBytes());
+    }
+
+    // Get profile pic
+    public Optional<String> getProfileImage(String id) {
+        return userRepo.getProfile(id);
+    }
+
     // Update BMI
     public void updateBmi(String id, Float bmi) {
         userRepo.updateBmi(id, bmi);
@@ -71,7 +82,10 @@ public class UserService {
             Email from = new Email("corbel-phoenix0b@icloud.com");
             String subject = "New Registration";
             Email to = new Email(email);
-            Content content = new Content("text/plain", "Hi there " + username + "! Thank you for registering an account with us!");
+            String loginLink = "https://www.google.com";
+            String htmlContent = "<p>Hi there " + username + "! Thank you for registering an account with us!</p>"
+                + "<p>Please click <a href='" + loginLink + "'>here</a> to log in.</p>";
+            Content content = new Content("text/html", htmlContent);
 
             Mail mail = new Mail(from, subject, to, content);
 

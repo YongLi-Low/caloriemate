@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MenuItem } from './models/MenuItem';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UsernameService } from './services/username.service';
 
 @Component({
@@ -15,11 +15,24 @@ export class AppComponent implements OnInit{
   currentDate!: Date
   formattedDate!: string
 
+  logout = () => {
+    this.router.navigate(['/']).then(() => {
+      this.router.navigateByUrl(this.router.url);
+    });
+    this.username = '';
+    this.id = '';
+    this.menuItems = [
+      { label: 'Register an Account', link: '/register' }
+    ];
+    this.menuItems2 = [
+      { label: 'Register an Account', link: '/register' }
+    ];
+  };
+
   constructor(private router: Router, private usernameSvc: UsernameService) {}
 
-  menuItems: MenuItem[] = [
-    { label: 'Register an Account', link: '/register' },
-  ];
+  menuItems: MenuItem[] = [];
+  menuItems2: MenuItem[] = [];
 
   ngOnInit(): void {
     this.currentDate = new Date();
@@ -34,33 +47,86 @@ export class AppComponent implements OnInit{
     this.usernameSvc.userInfo$.subscribe(userInfo => {
       this.username = userInfo.username;
       this.id = userInfo.id;
+      // console.info("Username, ID: ", this.username, this.id)
       setTimeout(() => {
         this.updateMenuItems(this.username, this.id);
-        // console.info(">>> ID: ", this.id);
-        // console.info(">>> Username: ", this.username);
       });
     })
   }
 
   updateMenuItems(username: string, id: string) {
-    // Dynamically update the menu items based on the current route or component
-    // For example, you can check the current route URL and update the menu items accordingly
-    const currentUrl = this.router.url.toLowerCase();
+        const currentUrl = this.router.url.toLowerCase();
+        // console.info("Username, ID after login: ", username, id)
+        if (currentUrl.includes('/login')) {
+          this.menuItems = [
+            { label: 'Home', link: '/login/' + username + '/' + id },
+            { label: 'BMI Calculator', link: '/login/' + username + '/' + id + '/bmi' },
+            { label: 'Calories Calculator', link: '/login/' + username + '/' + id + '/caloriecal' },
+            { label: 'Calories Tracker', link: '/login/' + username + '/' + id + '/searchnutrition' },
+            { label: 'Exercises', link: '/login/' + username + '/' + id + '/searchexercise' },
+            { label: 'Update Profile', link: '/login/' + username + '/' + id + '/profile' },
+            { label: 'Logout', action: this.logout }
+          ];
+          this.menuItems2 = [
+            { label: 'Calories Tracker', link: '/login/' + username + '/' + id + '/searchnutrition' },
+            { label: 'Exercises', link: '/login/' + username + '/' + id + '/searchexercise' },
+            { label: 'Logout', action: this.logout }
+          ];
+        } 
+        else {
+          this.menuItems = [
+            { label: 'Register an Account', link: '/register' }
+          ];
+          this.menuItems2 = [
+            { label: 'Register an Account', link: '/register' }
+          ];
+        }
+    };
+  
+  
 
-    if (currentUrl.includes('/login')) {
-      this.menuItems = [
-        { label: 'Home', link: '/login/' + username + '/' + id },
-        { label: 'Food Calories Tracker', link: '/login/' + username + '/' + id + '/searchnutrition' },
-        { label: 'Exercises', link: '/login/' + username + '/' + id + '/searchexercise' },
-        { label: 'Calorie Calculator', link: '/login/' + username + '/' + id + '/caloriecal' },
-        { label: 'BMI Calculator', link: '/login/' + username + '/' + id + '/bmi' },
-        { label: 'Feedback', link: '/register' },
-        { label: 'Logout', link: '' }
-      ];
-    }
-  }
+  // updateMenuItems(username: string, id: string) {
+  //   this.router.events.subscribe(event => {
+  //     if (event instanceof NavigationEnd) {
+  //       const currentUrl = event.url.toLowerCase();
+  //       console.info("Current URL: ", currentUrl);
+  
+  //       if (currentUrl.includes('/login')) {
+  //         this.menuItems = [
+  //           { label: 'Home', link: '/login/' + username + '/' + id },
+  //           { label: 'BMI Calculator', link: '/login/' + username + '/' + id + '/bmi' },
+  //           { label: 'Calories Calculator', link: '/login/' + username + '/' + id + '/caloriecal' },
+  //           { label: 'Calories Tracker', link: '/login/' + username + '/' + id + '/searchnutrition' },
+  //           { label: 'Exercises', link: '/login/' + username + '/' + id + '/searchexercise' },
+  //           { label: 'Update Profile', link: '/login/' + username + '/' + id + '/profile' },
+  //           { label: 'Logout', action: this.logout }
+  //         ];
+  //       }
+  //     }
+  //   });
+  // }
 
-  logout() {
+  // updateMenuItems(username: string, id: string) {
+  //   // Dynamically update the menu items based on the current route or component
+  //   // For example, you can check the current route URL and update the menu items accordingly
+  //   const currentUrl = this.router.url.toLowerCase();
+  //   console.info("Current URL: ", currentUrl)
 
-  }
+  //   if (currentUrl.includes('/login')) {
+  //     this.menuItems = [
+  //       { label: 'Home', link: '/login/' + username + '/' + id },
+  //       { label: 'BMI Calculator', link: '/login/' + username + '/' + id + '/bmi' },
+  //       { label: 'Calories Calculator', link: '/login/' + username + '/' + id + '/caloriecal' },
+  //       { label: 'Calories Tracker', link: '/login/' + username + '/' + id + '/searchnutrition' },
+  //       { label: 'Exercises', link: '/login/' + username + '/' + id + '/searchexercise' },
+  //       { label: 'Update Profile', link: '/login/' + username + '/' + id + '/profile' },
+  //       { label: 'Logout', action: this.logout }
+  //     ];
+  //   }
+  //   else {
+  //     this.menuItems = [
+  //       { label: 'Register an Account', link: '/register' }
+  //     ];
+  //   }
+  // }
 }

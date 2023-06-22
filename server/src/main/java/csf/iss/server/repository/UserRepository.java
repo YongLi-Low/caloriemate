@@ -1,10 +1,15 @@
 package csf.iss.server.repository;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Base64;
 import java.util.Optional;
 
 import javax.sql.DataSource;
@@ -13,6 +18,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 import csf.iss.server.models.User;
@@ -24,10 +30,14 @@ public class UserRepository {
     private static final String FIND_BY_USERNAME_SQL = "select username from users where username = ?";
     private static final String GET_ID_SQL = "select id from users where username = ?";
     private static final String FIND_BY_USERNAME_PASSWORD_SQL = "select * from users where username = ? and password = ?";
+    // Update profile pic
+    private static final String UPDATE_PROFILE_SQL = "update users set image = ? where id = ?";
     // Update BMI
     private static final String UPDATE_BMI_SQL = "update users set bmi = ? where id = ?";
     // Update Calories
     private static final String UPDATE_CAL_SQL = "update users set calories = ? where id = ?";
+    // Get profile pic from id
+    private static final String GET_PROFILE_SQL = "select image from users where id = ?";
     // Get BMI from id
     private static final String GET_BMI_SQL = "select bmi from users where id = ?";
     // Get Calories from id
@@ -56,6 +66,53 @@ public class UserRepository {
         }
         catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    // Update profile pic
+    public void updateProfile(String id, byte[] image) {
+        jdbcTemplate.update(UPDATE_PROFILE_SQL, image, id);
+    }
+
+    // Get profile pic
+    public Optional<String> getProfile(String id) {
+        Object[] params = {id};
+        int[] types = {Types.VARCHAR};
+
+        try {
+            Optional<String> result = jdbcTemplate.query(GET_PROFILE_SQL, params, types, (ResultSetExtractor<Optional<String>>) rs -> {
+                if (rs.next()) {
+                    Blob imageBlob = rs.getBlob("image");
+                    if (imageBlob != null) {
+                        try (InputStream is = imageBlob.getBinaryStream()) {
+                            ByteArrayOutputStream os = new ByteArrayOutputStream();
+                            byte[] buffer = new byte[4096];
+                            int bytesRead;
+                            while ((bytesRead = is.read(buffer)) != -1) {
+                                os.write(buffer, 0, bytesRead);
+                            }
+                            byte[] imageData = os.toByteArray();
+                            String base64Image = Base64.getEncoder().encodeToString(imageData);
+                            return Optional.of(base64Image);
+                        }
+                        catch (IOException e) {
+                            return Optional.empty();
+                        }
+                    }   
+                }
+                return Optional.empty();
+            });
+            if (result.isPresent()) {
+                String base64Image = result.get();
+                // System.out.println("Profile Image Data: " + base64Image);
+            } else {
+                System.out.println("No profile image found.");
+            }
+            
+            return result;
+        } 
+        catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
 

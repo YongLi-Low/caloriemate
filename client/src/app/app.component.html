@@ -1,4 +1,4 @@
-<mat-toolbar color="primary">
+<!-- <mat-toolbar color="primary">
   <button mat-icon-button [mat-menu-trigger-for]="menu">
     <mat-icon>menu</mat-icon>
   </button>
@@ -8,7 +8,30 @@
     <button mat-menu-item *ngFor="let menuItem of menuItems" [routerLink]="menuItem.link">{{menuItem.label}}</button>
   </mat-menu>
   <span>{{formattedDate}}</span>
+</mat-toolbar> -->
+
+<mat-toolbar color="primary">
+  <button mat-icon-button [mat-menu-trigger-for]="menu">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span class="calorie-mate">CalorieMate</span>
+  <ng-container *ngFor="let menuItem of menuItems2">
+    <div class="menu-item" [routerLink]="menuItem.link" (click)="menuItem.action ? menuItem.action() : null">
+      {{ menuItem.label }}
+    </div>
+  </ng-container>
+  <span class="example-spacer"></span>
+  <span>{{formattedDate}}</span>
 </mat-toolbar>
+
+<!-- <mat-menu #menu="matMenu">
+  <button mat-menu-item *ngFor="let menuItem of menuItems" [routerLink]="menuItem.link">{{menuItem.label}}</button>
+</mat-menu> -->
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item class="menu-item" *ngFor="let menuItem of menuItems" [routerLink]="menuItem.link" (click)="menuItem.action ? menuItem.action() : null">{{menuItem.label}}</button>
+</mat-menu>
+
 
 <router-outlet></router-outlet>
 

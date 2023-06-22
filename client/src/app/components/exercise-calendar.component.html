@@ -1,0 +1,33 @@
+<h3 class="form-header">Schedule Exercise</h3>
+
+<form class="form" [formGroup]="addExerciseForm" (ngSubmit)="schedule()">
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Exercise Name: </mat-label>
+            <input matInput type="text" formControlName="title">
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field class="full-width">
+            <mat-label>Description: </mat-label>
+            <input matInput type="text" matTooltip="Optional" formControlName="description">
+        </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field>
+            <input matInput type="datetime-local" placeholder="Start Date and Time" formControlName="startDateTime">
+          </mat-form-field>
+    </div>
+    <div>
+        <mat-form-field>
+            <input matInput type="datetime-local" placeholder="End Date and Time" formControlName="endDateTime">
+          </mat-form-field>
+    </div>
+    <input type="hidden" formControlName="username">
+    <div class="button-container">
+        <button mat-raised-button color="primary" type="submit" [disabled]="addExerciseForm.invalid">Schedule</button>
+        <div class="button-space"></div>
+        <button mat-raised-button color="warn" type="button" (click)="goBack()">Back</button>
+    </div>
+</form>
+<br>
