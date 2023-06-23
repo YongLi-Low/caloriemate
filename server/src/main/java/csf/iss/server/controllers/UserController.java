@@ -127,9 +127,9 @@ public class UserController {
         if (imageOptional.isPresent()) {
             String base64Image = imageOptional.get();
             resp = base64Image;
-            JsonObject obj = Json.createObjectBuilder()
-                        .add("response", resp)
-                        .build();
+            // JsonObject obj = Json.createObjectBuilder()
+            //             .add("response", resp)
+            //             .build();
             return ResponseEntity.status(HttpStatus.OK).body(resp);
         }
         else {

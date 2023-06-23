@@ -8,6 +8,7 @@ public class EventData {
     private DateTime startDateTime;
     private DateTime endDateTime;
     private String username;
+    private String code;
     
     public String getTitle() {
         return title;
@@ -39,13 +40,20 @@ public class EventData {
     public void setUsername(String username) {
         this.username = username;
     }
-    public EventData(String title, String description, DateTime startDateTime, DateTime endDateTime, String username) {
+    public String getCode() {
+        return code;
+    }
+    public void setCode(String code) {
+        this.code = code;
+    }
+    public EventData(String title, String description, DateTime startDateTime, DateTime endDateTime, String username,
+            String code) {
         this.title = title;
         this.description = description;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
         this.username = username;
+        this.code = code;
     }
-    
     
 }

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +22,9 @@ import csf.iss.server.repository.UserRepository;
 
 @Service
 public class UserService {
+
+    @Value("${sendgrid.key}")
+    private String sendgridKey;
     
     @Autowired
     private UserRepository userRepo;
@@ -75,7 +79,7 @@ public class UserService {
 
     // Sending confirmation email after registration
     public void sendConfirmationEmail(String email, String username) {
-        SendGrid sg = new SendGrid("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");
+        SendGrid sg = new SendGrid(sendgridKey);
         Request request = new Request();
 
         try {

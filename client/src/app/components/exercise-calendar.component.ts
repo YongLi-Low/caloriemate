@@ -1,5 +1,5 @@
 import { DatePipe, Location } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -17,6 +17,7 @@ export class ExerciseCalendarComponent implements OnInit {
   addExerciseForm!: FormGroup;
   authenticationLink!: string;
   username!: string;
+  id!: string;
 
   constructor(private activatedRoute: ActivatedRoute, private fb: FormBuilder,
               private location: Location, private datePipe: DatePipe,
@@ -24,6 +25,7 @@ export class ExerciseCalendarComponent implements OnInit {
               
   ngOnInit(): void {
     this.username = this.activatedRoute.snapshot.params['username'];
+    this.id = this.activatedRoute.snapshot.params['id'];
     this.exerciseName = this.activatedRoute.snapshot.params['exercise'];
     this.addExerciseForm = this.createForm();
   }
@@ -34,8 +36,18 @@ export class ExerciseCalendarComponent implements OnInit {
       description: this.fb.control(''),
       startDateTime: this.fb.control('', [Validators.required]),
       endDateTime: this.fb.control('', [Validators.required]),
-      username: this.fb.control(this.username)
+      username: this.fb.control(this.username),
+      code: this.fb.control('')
     })
+  }
+
+  getAuthorizationUrl(username: string, id: string, eventData: any): Promise<any> {
+    const params = new HttpParams()
+      .set("username", username)
+      .set("id", id)
+      .set("eventData", JSON.stringify(eventData));
+
+    return lastValueFrom(this.httpClient.get<any>("/api/exercises/events/url", { params: params }));
   }
 
   schedule() {
@@ -46,20 +58,41 @@ export class ExerciseCalendarComponent implements OnInit {
     const endDateTime = this.datePipe.transform(originalEndDateTime, 'yyyy-MM-ddTHH:mm:ss+08:00');
     formData.startDateTime = startDateTime;
     formData.endDateTime = endDateTime;
+    formData.code = " ";
 
-    lastValueFrom(this.httpClient.post<string>('/api/exercises/events', formData))
-      .then((response: any) => {
-        this.showSnackBar('Added to Calendar', 'success');
-        // console.info(response.response);
-        // const eventLink = response.eventLink;
-        // console.log('Event link:', eventLink);
+    this.getAuthorizationUrl(this.username, this.id, formData)
+      .then((result: any) => {
+        if (result.response != "credential exists") {
+          window.location.href = result.response;
+        }
+        lastValueFrom(this.httpClient.post<string>('/api/exercises/events', formData))
+          .then((response: any) => {
+            if (response.response == 'Event created successfully') {
+              this.showSnackBar('Added to Calendar', 'success');
+              // console.info(response.response);
+            }
+          })
+          .catch(error => {
+            {
+              console.log('Error creating event:', error);
+              this.showSnackBar('Failed to add to Calendar', 'error');
+            }}
+          )
       })
-      .catch(error => {
-        {
-          console.log('Error creating event:', error);
-          this.showSnackBar('Failed to add to Calendar', 'error');
-        }}
-      )
+
+    // lastValueFrom(this.httpClient.post<string>('/api/exercises/events', formData))
+    //   .then((response: any) => {
+    //     if (response.response == 'Event created successfully') {
+    //       this.showSnackBar('Added to Calendar', 'success');
+    //       // console.info(response.response);
+    //     }
+    //   })
+    //   .catch(error => {
+    //     {
+    //       console.log('Error creating event:', error);
+    //       this.showSnackBar('Failed to add to Calendar', 'error');
+    //     }}
+    //   )
   }
 
   showSnackBar(message: string, panelClass: string) {

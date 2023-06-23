@@ -103,10 +103,11 @@ public class UserRepository {
                 return Optional.empty();
             });
             if (result.isPresent()) {
-                String base64Image = result.get();
+                // String base64Image = result.get();
+                result.get();
                 // System.out.println("Profile Image Data: " + base64Image);
             } else {
-                System.out.println("No profile image found.");
+                // System.out.println("No profile image found.");
             }
             
             return result;
