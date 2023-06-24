@@ -5,6 +5,9 @@
         <mat-form-field class="full-width">
             <mat-label>Food:</mat-label>
             <input matInput type="text" formControlName="foodName">
+            <mat-error *ngIf="nutritionForm.get('foodName')?.errors">
+                Please enter at least 2 characters
+            </mat-error>
         </mat-form-field>
     </div>
     <div>
@@ -54,7 +57,7 @@
     </mat-list-item>
 </mat-list>
 <div *ngIf="showNoResults">
-    <h4>No Results Found</h4>
+    <h4>No Results Found. You may fill in the customised form in the section below.</h4>
 </div>
 <hr>
 <mat-accordion>

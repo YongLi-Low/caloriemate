@@ -28,8 +28,8 @@ export class BmiComponent implements OnInit{
 
   createForm() {
     return this.fb.group({
-      weight: this.fb.control('', [Validators.required]),
-      height: this.fb.control('', [Validators.required])
+      weight: this.fb.control('', [Validators.required, Validators.min(1)]),
+      height: this.fb.control('', [Validators.required, Validators.min(1)])
     })
   }
 

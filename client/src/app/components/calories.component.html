@@ -17,8 +17,11 @@
         <mat-form-field class="full-width">
             <mat-label>Age (years): </mat-label>
             <input matInput type="number" formControlName="age">
-            <mat-error *ngIf="calForm.get('age')?.errors">
+            <mat-error *ngIf="calForm.get('age')?.errors?.['required']">
                 Age is required
+            </mat-error>
+            <mat-error *ngIf="calForm.get('age')?.errors?.['min']">
+                Age must be at least 1
             </mat-error>
         </mat-form-field>
     </div>
@@ -26,8 +29,11 @@
         <mat-form-field class="full-width">
             <mat-label>Weight (kg): </mat-label>
             <input matInput type="number" formControlName="weight">
-            <mat-error *ngIf="calForm.get('weight')?.errors">
+            <mat-error *ngIf="calForm.get('weight')?.errors?.['required']">
                 Weight is required
+            </mat-error>
+            <mat-error *ngIf="calForm.get('weight')?.errors?.['min']">
+                Weight must be at least 1
             </mat-error>
         </mat-form-field>
     </div>
@@ -35,8 +41,11 @@
         <mat-form-field class="full-width">
             <mat-label>Height (cm): </mat-label>
             <input matInput type="number" formControlName="height">
-            <mat-error *ngIf="calForm.get('height')?.errors">
+            <mat-error *ngIf="calForm.get('height')?.errors?.['required']">
                 Height is required
+            </mat-error>
+            <mat-error *ngIf="calForm.get('height')?.errors?.['required']">
+                Height must be at least 1
             </mat-error>
         </mat-form-field>
     </div>

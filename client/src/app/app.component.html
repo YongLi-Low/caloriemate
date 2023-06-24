@@ -33,8 +33,27 @@
 </mat-menu>
 
 
-<router-outlet></router-outlet>
+<!-- <router-outlet></router-outlet>
 
 <footer class="mat-footer">
   <p class="footer-text">&copy; 2023 CalorieMate. All rights reserved.</p>
-</footer>
+</footer> -->
+
+<mat-sidenav-container class="container">
+  <mat-sidenav mode="over" opened="false">
+    <ng-container *ngFor="let menuItem of menuItems2">
+      <div class="menu-item" [routerLink]="menuItem.link" (click)="menuItem.action ? menuItem.action() : null">
+        {{ menuItem.label }}
+      </div>
+    </ng-container>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+
+    <footer class="mat-footer">
+      <p class="footer-text">&copy; 2023 CalorieMate. All rights reserved.</p>
+    </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+

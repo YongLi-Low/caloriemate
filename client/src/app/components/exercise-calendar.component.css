@@ -22,3 +22,7 @@
 .button-space {
     flex-grow: 1;
 }
+
+.custom-form-field {
+    width: 300px; /* Adjust the width as needed */
+}

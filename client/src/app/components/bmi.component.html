@@ -5,8 +5,11 @@
         <mat-form-field class="full-width">
             <mat-label>Weight (kg): </mat-label>
             <input matInput type="number" formControlName="weight">
-            <mat-error *ngIf="bmiForm.get('weight')?.errors">
+            <mat-error *ngIf="bmiForm.get('weight')?.errors?.['required']">
                 Weight is required
+            </mat-error>
+            <mat-error *ngIf="bmiForm.get('weight')?.errors?.['min']">
+                Weight must be at least 1
             </mat-error>
         </mat-form-field>
     </div>
@@ -14,8 +17,11 @@
         <mat-form-field class="full-width">
             <mat-label>Height (cm): </mat-label>
             <input matInput type="number" formControlName="height">
-            <mat-error *ngIf="bmiForm.get('height')?.errors">
+            <mat-error *ngIf="bmiForm.get('height')?.errors?.['required']">
                 Height is required
+            </mat-error>
+            <mat-error *ngIf="bmiForm.get('weight')?.errors?.['min']">
+                Height must be at least 1
             </mat-error>
         </mat-form-field>
     </div>
@@ -48,6 +54,6 @@
         </span>
     </p>
     <p>
-        <img [src]="'./assets/images/bmi_ranges.jpg'">
+        <img [src]="'./assets/images/bmi_ranges.jpg'" width="500">
     </p>
 </div>

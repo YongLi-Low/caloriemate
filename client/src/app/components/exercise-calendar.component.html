@@ -14,14 +14,20 @@
         </mat-form-field>
     </div>
     <div>
-        <mat-form-field>
+        <mat-form-field class="custom-form-field">
             <input matInput type="datetime-local" placeholder="Start Date and Time" formControlName="startDateTime">
-          </mat-form-field>
+            <mat-error *ngIf="addExerciseForm.get('startDateTime')?.errors">
+                Start Date and Time is required
+            </mat-error>
+        </mat-form-field>
     </div>
     <div>
-        <mat-form-field>
+        <mat-form-field class="custom-form-field">
             <input matInput type="datetime-local" placeholder="End Date and Time" formControlName="endDateTime">
-          </mat-form-field>
+            <mat-error *ngIf="addExerciseForm.get('endDateTime')?.errors">
+                End Date and Time is required
+            </mat-error>
+        </mat-form-field>
     </div>
     <input type="hidden" formControlName="username">
     <div class="button-container">

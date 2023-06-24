@@ -30,9 +30,9 @@ export class CaloriesComponent implements OnInit {
   createForm() {
     return this.fb.group({
       gender: this.fb.control('', [Validators.required]),
-      age: this.fb.control('', [Validators.required]),
-      weight: this.fb.control('', [Validators.required]),
-      height: this.fb.control('', [Validators.required]),
+      age: this.fb.control('', [Validators.required, Validators.min(1)]),
+      weight: this.fb.control('', [Validators.required, Validators.min(1)]),
+      height: this.fb.control('', [Validators.required, Validators.min(1)]),
       activityLevel: this.fb.control('', [Validators.required])
     })
   }
