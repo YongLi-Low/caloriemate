@@ -44,7 +44,7 @@
             <mat-error *ngIf="calForm.get('height')?.errors?.['required']">
                 Height is required
             </mat-error>
-            <mat-error *ngIf="calForm.get('height')?.errors?.['required']">
+            <mat-error *ngIf="calForm.get('height')?.errors?.['min']">
                 Height must be at least 1
             </mat-error>
         </mat-form-field>
