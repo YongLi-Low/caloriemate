@@ -13,6 +13,7 @@ export class RegisterComponent implements OnInit{
 
   regForm!: FormGroup
   snackBarRef!: MatSnackBarRef<any> | null;
+  isRegistering: boolean = false;
 
   constructor(private fb: FormBuilder, private registerSvc: RegisterService,
               private router: Router, private snackBar: MatSnackBar) {}
@@ -54,10 +55,12 @@ export class RegisterComponent implements OnInit{
   register() {
     const formVal = this.regForm.value;
     // console.info(formVal)
+    this.isRegistering = true;
     this.registerSvc.register(formVal)
       .then((response: any) => {
         // console.info('>>> Response: ', response)
         if (response.response === 'Username exists!') {
+          this.isRegistering = false;
           // Show material snackbar with the error message and the close button
           this.snackBar.open('Username already exists!', 'Dismiss');
           this.snackBarRef?.onAction().subscribe(() => {
@@ -65,6 +68,7 @@ export class RegisterComponent implements OnInit{
           })
         }
         else {
+          this.isRegistering = false;
           this.router.navigate(['/register/success'])
         }
       })

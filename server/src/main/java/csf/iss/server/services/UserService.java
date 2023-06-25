@@ -87,7 +87,7 @@ public class UserService {
             String subject = "New Registration";
             Email to = new Email(email);
             String loginLink = "https://www.google.com";
-            String htmlContent = "<p>Hi there " + username + "! Thank you for registering an account with us!</p>"
+            String htmlContent = "<p>Hi there " + username.substring(0, 1).toUpperCase() + username.substring(1).toLowerCase() + "! Thank you for registering an account with us!</p>"
                 + "<p>Please click <a href='" + loginLink + "'>here</a> to log in.</p>";
             Content content = new Content("text/html", htmlContent);
 

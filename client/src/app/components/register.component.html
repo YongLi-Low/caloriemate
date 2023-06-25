@@ -51,4 +51,7 @@
         <div class="button-space"></div>
         <button mat-raised-button color="warn" type="button" [routerLink]="['']">Back</button>
     </div>
+    <div>
+        <mat-progress-bar *ngIf="isRegistering" mode="indeterminate"></mat-progress-bar>
+    </div>
 </form>
