@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignore credentials.json file
+server/src/main/resources/credentials.json

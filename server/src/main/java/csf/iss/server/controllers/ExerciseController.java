@@ -84,6 +84,7 @@ public class ExerciseController {
             JsonObject response = Json.createObjectBuilder()
                 .add("response", opt.get())
                 .build();
+            System.out.println(response);
             return ResponseEntity.status(HttpStatus.OK).body(response.toString());
         }
 
